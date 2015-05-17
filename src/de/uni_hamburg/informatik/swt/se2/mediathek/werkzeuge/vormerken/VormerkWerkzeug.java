@@ -12,6 +12,7 @@ import de.uni_hamburg.informatik.swt.se2.mediathek.services.ServiceObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.KundenstammService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihService;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerken.VormerkService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.SubWerkzeugObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.subwerkzeuge.kundenauflister.KundenauflisterWerkzeug;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.subwerkzeuge.kundendetailanzeiger.KundenDetailAnzeigerWerkzeug;
@@ -37,7 +38,12 @@ public class VormerkWerkzeug
      * Der Service zum Ausleihen von Medien.
      */
     private final VerleihService _verleihService;
-
+    
+    /**
+     * Der Service zum Vormerken von Medien.
+     */
+    private final VormerkService _vormerkService;
+    
     /**
      * Das Sub-Werkzeug zum Darstellen und Selektieren der Kunden.
      */
@@ -72,13 +78,14 @@ public class VormerkWerkzeug
      * @require verleihService != null
      */
     public VormerkWerkzeug(MedienbestandService medienbestand,
-            KundenstammService kundenstamm, VerleihService verleihService)
+            KundenstammService kundenstamm, VerleihService verleihService, VormerkService vormerkService)
     {
         assert medienbestand != null : "Vorbedingung verletzt: medienbestand != null";
         assert kundenstamm != null : "Vorbedingung verletzt: kundenstamm != null";
         assert verleihService != null : "Vorbedingung verletzt: verleihService != null";
 
         _verleihService = verleihService;
+        _vormerkService = vormerkService;
 
         // Subwerkzeuge erstellen
         _kundenAuflisterWerkzeug = new KundenauflisterWerkzeug(kundenstamm);
@@ -214,7 +221,7 @@ public class VormerkWerkzeug
         // werden. Ist dies korrekt imlpementiert, wird der Vormerk-Button gemäß
         // der Anforderungen a), b), c) und e) aktiviert.
         boolean vormerkenMoeglich = (kunde != null) && !medien.isEmpty();
-
+        _vormerkService.istVormerkenMoeglich(medium);
         return vormerkenMoeglich;
     }
 

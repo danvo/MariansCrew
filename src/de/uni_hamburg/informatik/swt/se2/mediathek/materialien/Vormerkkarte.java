@@ -27,13 +27,16 @@ public class Vormerkkarte
             throw new VormerkkarteVollException();
         }
     }
-    
+    public void rueckeVormerkungAuf()
+    {
+    	_vormerker.remove(0);
+    }
     public int getAnzahlVormerker() 
     {
         return _vormerker.size();
     }
 
-    public List<Kunde> getVormerker() 
+    public ArrayList<Kunde> getVormerker() 
     {
         return _vormerker;
     }

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.KundenstammService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihService;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerken.VormerkService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.ausleihe.AusleihWerkzeug;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.rueckgabe.RueckgabeWerkzeug;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.vormerken.VormerkWerkzeug;
@@ -52,7 +53,10 @@ public class MediathekWerkzeug
      * Das VormerkWerkzeug.
      */
     private VormerkWerkzeug _vormerkWerkzeug;
-
+    /**
+     * Der Vormerkservice.
+     */
+    private VormerkService _vormerkService;
     /**
      * Initialisiert ein neues MediathekWerkzeug.
      * 
@@ -80,7 +84,7 @@ public class MediathekWerkzeug
                 _verleihService);
         _rueckgabeWerkzeug = new RueckgabeWerkzeug(_verleihService);
         _vormerkWerkzeug = new VormerkWerkzeug(_medienbestand, _kundenstamm,
-                _verleihService);
+                _verleihService, _vormerkService);
         // Erzeuge UI für dieses Werkzeug
         _mediathekUI = new MediathekUI(_ausleihWerkzeug.getUIPanel(),
                 _rueckgabeWerkzeug.getUIPanel(), _vormerkWerkzeug.getUIPanel());
