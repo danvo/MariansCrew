@@ -31,6 +31,7 @@ public class Vormerkkarte
     {
     	_vormerker.remove(0);
     }
+    
     public int getAnzahlVormerker() 
     {
         return _vormerker.size();

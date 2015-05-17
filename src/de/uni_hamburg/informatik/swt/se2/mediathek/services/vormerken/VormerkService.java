@@ -26,8 +26,11 @@ public class VormerkService
     public boolean istVormerkenMoeglich(Medium medium)
     {
     	Vormerkkarte vormerkkarte = _vormerkKarten.get(medium);
-    	return vormerkkarte.getAnzahlVormerker() < 3;
-        
+    	if (vormerkkarte != null) {
+    		return vormerkkarte.getAnzahlVormerker() < 3;
+    	} else {
+    		return true;
+    	}
     }
 
     public boolean istKundeErsterVormerker(Medium medium, Kunde kunde)

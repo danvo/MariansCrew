@@ -226,9 +226,7 @@ public class VormerkWerkzeug
         // werden. Ist dies korrekt imlpementiert, wird der Vormerk-Button gemäß
         // der Anforderungen a), b), c) und e) aktiviert.
         boolean vormerkenMoeglich = (kunde != null) && !medien.isEmpty();
-        for (int i = 0; i < medien.size(); i++)
-        {
-        	Medium medium = medien.get(i);
+        for (Medium medium : medien) {
         	if(_vormerkService.istVormerkenMoeglich(medium))
         	{
         		vormerkenMoeglich = true;
@@ -239,7 +237,9 @@ public class VormerkWerkzeug
         	}
         }
         return vormerkenMoeglich;
-    }
+	}
+
+    
 
     /**
      * Merkt die ausgewählten Medien für einen Kunden vor. Diese Methode wird
