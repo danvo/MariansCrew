@@ -13,6 +13,7 @@ import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.Kundenst
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerken.VormerkService;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerken.VormerkkarteVollException;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.SubWerkzeugObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.subwerkzeuge.kundenauflister.KundenauflisterWerkzeug;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.subwerkzeuge.kundendetailanzeiger.KundenDetailAnzeigerWerkzeug;
@@ -165,7 +166,11 @@ public class VormerkWerkzeug
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                merkeAusgewaehlteMedienVor();
+                try {
+					merkeAusgewaehlteMedienVor();
+				} catch (VormerkkarteVollException e1) {
+					System.out.println("Die Vormerkkarte ist voll.");
+				}
             }
         });
     }
@@ -221,7 +226,18 @@ public class VormerkWerkzeug
         // werden. Ist dies korrekt imlpementiert, wird der Vormerk-Button gemäß
         // der Anforderungen a), b), c) und e) aktiviert.
         boolean vormerkenMoeglich = (kunde != null) && !medien.isEmpty();
-        _vormerkService.istVormerkenMoeglich(medium);
+        for (int i = 0; i < medien.size(); i++)
+        {
+        	Medium medium = medien.get(i);
+        	if(_vormerkService.istVormerkenMoeglich(medium))
+        	{
+        		vormerkenMoeglich = true;
+        	}
+        	else
+        	{
+        		return false;
+        	}
+        }
         return vormerkenMoeglich;
     }
 
@@ -229,15 +245,20 @@ public class VormerkWerkzeug
      * Merkt die ausgewählten Medien für einen Kunden vor. Diese Methode wird
      * über einen Listener angestoßen, der reagiert, wenn der Benutzer den
      * VormerkButton drückt.
+     * @throws VormerkkarteVollException 
      */
-    private void merkeAusgewaehlteMedienVor()
+    private void merkeAusgewaehlteMedienVor() throws VormerkkarteVollException
     {
 
         List<Medium> selectedMedien = _medienAuflisterWerkzeug
                 .getSelectedMedien();
         Kunde selectedKunde = _kundenAuflisterWerkzeug.getSelectedKunde();
         // TODO für Aufgabenblatt 6 (nicht löschen): Vormerken einbauen
-
+        for (int i = 0; i < selectedMedien.size(); i++)
+        {
+        	Medium medium = selectedMedien.get(i);
+        	_vormerkService.merkeVor(medium, selectedKunde);
+        }
     }
 
     /**

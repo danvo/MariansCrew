@@ -40,6 +40,11 @@ public class MediathekWerkzeug
     private final VerleihService _verleihService;
 
     /**
+     * Der VormerkService.
+     */
+    private final VormerkService _vormerkService;
+    
+    /**
      * Das AusleihWerkzeug.
      */
     private final AusleihWerkzeug _ausleihWerkzeug;
@@ -53,10 +58,7 @@ public class MediathekWerkzeug
      * Das VormerkWerkzeug.
      */
     private VormerkWerkzeug _vormerkWerkzeug;
-    /**
-     * Der Vormerkservice.
-     */
-    private VormerkService _vormerkService;
+    
     /**
      * Initialisiert ein neues MediathekWerkzeug.
      * 
@@ -69,7 +71,7 @@ public class MediathekWerkzeug
      * @require verleihService != null
      */
     public MediathekWerkzeug(MedienbestandService medienbestand,
-            KundenstammService kundenstamm, VerleihService verleihService)
+            KundenstammService kundenstamm, VerleihService verleihService, VormerkService vormerkService)
     {
         assert medienbestand != null : "Vorbedingung verletzt: medienbestand != null";
         assert kundenstamm != null : "Vorbedingung verletzt: kundenstamm != null";
@@ -78,6 +80,7 @@ public class MediathekWerkzeug
         _medienbestand = medienbestand;
         _kundenstamm = kundenstamm;
         _verleihService = verleihService;
+        _vormerkService = vormerkService;
 
         // Erzeuge Subwerkzeuge
         _ausleihWerkzeug = new AusleihWerkzeug(_medienbestand, _kundenstamm,
