@@ -136,6 +136,7 @@ public class VormerkWerkzeug
     private void registriereUIAktionen()
     {
         registriereVormerkAktion();
+        registriereStornierAktion();
     }
 
     /**
@@ -151,6 +152,7 @@ public class VormerkWerkzeug
             public void reagiereAufAenderung()
             {
                 aktualisiereVormerkButton();
+                aktualisiereStorniereButton();
             }
         });
     }
@@ -174,6 +176,17 @@ public class VormerkWerkzeug
             }
         });
     }
+    
+    private void registriereStornierAktion() 
+    {
+    	_vormerkUI.getStornierenButton().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				storniereVormerkung();
+			}
+		});
+    }
 
     /**
      * Registiert die Aktion, die ausgeführt wird, wenn ein Kunde ausgewählt
@@ -189,6 +202,7 @@ public class VormerkWerkzeug
                     {
                         zeigeAusgewaehltenKunden();
                         aktualisiereVormerkButton();
+                        aktualisiereStorniereButton();
                     }
                 });
     }
@@ -208,6 +222,7 @@ public class VormerkWerkzeug
                     {
                         zeigeAusgewaehlteMedien();
                         aktualisiereVormerkButton();
+                        aktualisiereStorniereButton();
                     }
                 });
     }
@@ -243,6 +258,29 @@ public class VormerkWerkzeug
         return vormerkenMoeglich;
 	}
     
+    private boolean istStornierenMoeglich()
+    {
+        List<Medium> medien = _medienAuflisterWerkzeug.getSelectedMedien();
+        Kunde kunde = _kundenAuflisterWerkzeug.getSelectedKunde();
+        
+        if(!(kunde != null) && !medien.isEmpty()) 
+        {
+        	return false;
+        }
+        boolean stornierenMoeglich = false;
+        for (Medium medium : medien) {
+        	if(_vormerkService.istStornierenMoeglich(medium, kunde))
+        	{
+        		stornierenMoeglich = true;
+        	}
+        	else
+        	{
+        		return false;
+        	}
+        }
+        return stornierenMoeglich;
+    }
+    
 
     /**
      * Merkt die ausgewählten Medien für einen Kunden vor. Diese Methode wird
@@ -255,9 +293,17 @@ public class VormerkWerkzeug
         List<Medium> selectedMedien = _medienAuflisterWerkzeug.getSelectedMedien();
         Kunde selectedKunde = _kundenAuflisterWerkzeug.getSelectedKunde();
         // TODO für Aufgabenblatt 6 (nicht löschen): Vormerken einbauen
-        for (Medium medium : selectedMedien) {
+        for (Medium medium : selectedMedien) 
+        {
         	_vormerkService.merkeVor(medium, selectedKunde);
 		}
+    }
+    
+    private void storniereVormerkung() 
+    {
+        List<Medium> selectedMedien = _medienAuflisterWerkzeug.getSelectedMedien();
+        Kunde selectedKunde = _kundenAuflisterWerkzeug.getSelectedKunde();
+        _vormerkService.storniereVormerkung(selectedMedien, selectedKunde);
     }
 
     /**
@@ -292,6 +338,16 @@ public class VormerkWerkzeug
     {
         boolean istVormerkenMoeglich = istVormerkenMoeglich();
         _vormerkUI.getVormerkenButton().setEnabled(istVormerkenMoeglich);
+    }
+    
+    /**
+     * Setzt den StornierButton auf benutzbar oder nicht, je nach dem
+     * ob die Stornierung möglich ist.
+     */
+    private void aktualisiereStorniereButton()
+    {
+    	boolean istStornierenMoeglich = istStornierenMoeglich();
+    	_vormerkUI.getStornierenButton().setEnabled(istStornierenMoeglich);
     }
 
     /**

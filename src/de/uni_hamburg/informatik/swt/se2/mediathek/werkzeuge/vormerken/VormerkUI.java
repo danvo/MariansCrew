@@ -23,6 +23,7 @@ class VormerkUI
 {
     // UI-Komponenten
     private JButton _vormerkenButton;
+    private JButton _stornierenButton;
     private JPanel _ausleihePanel;
     private JSplitPane _auflisterSplitpane;
     private JPanel _anzeigerPanel;
@@ -147,7 +148,7 @@ class VormerkUI
     {
         JPanel _buttonPanel = new JPanel();
         _ausleihePanel.add(_buttonPanel, BorderLayout.SOUTH);
-        _buttonPanel.setPreferredSize(new Dimension(-1, 110));
+        _buttonPanel.setPreferredSize(new Dimension(-1, 160));
         _buttonPanel.setSize(-1, -1);
         _buttonPanel.setBackground(UIConstants.BACKGROUND_COLOR);
 
@@ -158,6 +159,15 @@ class VormerkUI
         _vormerkenButton.setSize(-1, -1);
         _vormerkenButton.setFont(UIConstants.BUTTON_FONT);
         _vormerkenButton.setEnabled(false);
+        
+        _stornierenButton = new JButton();
+        _buttonPanel.add(_stornierenButton);
+        _stornierenButton.setText("stornieren");
+        _stornierenButton.setPreferredSize(new Dimension(140, 40));
+        _stornierenButton.setSize(-1, -1);
+        _stornierenButton.setFont(UIConstants.BUTTON_FONT);
+        _stornierenButton.setEnabled(false);
+        
     }
 
     /**
@@ -177,6 +187,11 @@ class VormerkUI
     public JButton getVormerkenButton()
     {
         return _vormerkenButton;
+    }
+    
+    public JButton getStornierenButton() 
+    {
+    	return _stornierenButton;
     }
 
     /**

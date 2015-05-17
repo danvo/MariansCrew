@@ -45,6 +45,19 @@ public class VormerkService extends AbstractObservableService
     	}
     }
     
+    public boolean istStornierenMoeglich(Medium medium, Kunde kunde) 
+    {
+    	Vormerkkarte vormerkkarte = _vormerkKarten.get(medium);
+    	if (vormerkkarte != null)
+    	{
+    		return vormerkkarte.getVormerker().contains(kunde);
+    	}
+    	else 
+    	{
+    		return false;
+    	}
+    }
+    
     public List<Kunde> getVormerker(Medium medium) 
     {
     	if (_vormerkKarten.get(medium) != null) {
@@ -72,5 +85,16 @@ public class VormerkService extends AbstractObservableService
     	if (_vormerkKarten.get(medium) != null) {
     		_vormerkKarten.get(medium).rueckeVormerkungAuf();
     	}
+    }
+    
+    public void storniereVormerkung(List<Medium> medien, Kunde kunde) 
+    {
+    	for (Medium medium : medien) {
+    		if (_vormerkKarten.get(medium) != null)
+    		{
+    			_vormerkKarten.get(medium).nimmVormerkungWeg(kunde);
+    		}
+		}
+    	informiereUeberAenderung();
     }
 }
