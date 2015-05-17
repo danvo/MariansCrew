@@ -84,7 +84,7 @@ public class MediathekWerkzeug
 
         // Erzeuge Subwerkzeuge
         _ausleihWerkzeug = new AusleihWerkzeug(_medienbestand, _kundenstamm,
-                _verleihService);
+                _verleihService, _vormerkService);
         _rueckgabeWerkzeug = new RueckgabeWerkzeug(_verleihService);
         _vormerkWerkzeug = new VormerkWerkzeug(_medienbestand, _kundenstamm,
                 _verleihService, _vormerkService);

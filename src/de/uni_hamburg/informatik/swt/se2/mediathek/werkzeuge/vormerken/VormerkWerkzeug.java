@@ -91,7 +91,7 @@ public class VormerkWerkzeug
         // Subwerkzeuge erstellen
         _kundenAuflisterWerkzeug = new KundenauflisterWerkzeug(kundenstamm);
         _medienAuflisterWerkzeug = new VormerkMedienauflisterWerkzeug(
-                medienbestand, verleihService);
+                medienbestand, verleihService, _vormerkService);
         _medienDetailAnzeigerWerkzeug = new MedienDetailAnzeigerWerkzeug();
         _kundenDetailAnzeigerWerkzeug = new KundenDetailAnzeigerWerkzeug();
 
@@ -238,7 +238,6 @@ public class VormerkWerkzeug
         }
         return vormerkenMoeglich;
 	}
-
     
 
     /**
@@ -249,16 +248,12 @@ public class VormerkWerkzeug
      */
     private void merkeAusgewaehlteMedienVor() throws VormerkkarteVollException
     {
-
-        List<Medium> selectedMedien = _medienAuflisterWerkzeug
-                .getSelectedMedien();
+        List<Medium> selectedMedien = _medienAuflisterWerkzeug.getSelectedMedien();
         Kunde selectedKunde = _kundenAuflisterWerkzeug.getSelectedKunde();
         // TODO für Aufgabenblatt 6 (nicht löschen): Vormerken einbauen
-        for (int i = 0; i < selectedMedien.size(); i++)
-        {
-        	Medium medium = selectedMedien.get(i);
+        for (Medium medium : selectedMedien) {
         	_vormerkService.merkeVor(medium, selectedKunde);
-        }
+		}
     }
 
     /**

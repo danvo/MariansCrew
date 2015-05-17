@@ -15,6 +15,7 @@ import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.Kundenst
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.ProtokollierException;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihService;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerken.VormerkService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.SubWerkzeugObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.subwerkzeuge.ausleihemedienauflister.AusleiheMedienauflisterWerkzeug;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.subwerkzeuge.kundenauflister.KundenauflisterWerkzeug;
@@ -41,6 +42,12 @@ public class AusleihWerkzeug
      */
     private final VerleihService _verleihService;
 
+    /**
+     * Der Service zum Vormerken von Medien.
+     */
+    
+    private final VormerkService _vormerkService;
+    
     /**
      * Das Sub-Werkzeug zum darstellen und selektieren der Kunden.
      */
@@ -75,13 +82,15 @@ public class AusleihWerkzeug
      * @require verleihService != null
      */
     public AusleihWerkzeug(MedienbestandService medienbestand,
-            KundenstammService kundenstamm, VerleihService verleihService)
+            KundenstammService kundenstamm, VerleihService verleihService, VormerkService vormerkService)
     {
         assert medienbestand != null : "Vorbedingung verletzt: medienbestand != null";
         assert kundenstamm != null : "Vorbedingung verletzt: kundenstamm != null";
         assert verleihService != null : "Vorbedingung verletzt: verleihService != null";
-
+        assert vormerkService != null : "Vorbedingung verletzt: vormerkService != null";
+        
         _verleihService = verleihService;
+        _vormerkService = vormerkService;
 
         // Subwerkzeuge erstellen
         _kundenAuflisterWerkzeug = new KundenauflisterWerkzeug(kundenstamm);
@@ -217,7 +226,7 @@ public class AusleihWerkzeug
         // Medien nur vom ersten Vormerker ausgeliehen werden können, gemäß
         // Anforderung d).
         boolean ausleiheMoeglich = (kunde != null) && !medien.isEmpty()
-                && _verleihService.sindAlleNichtVerliehen(medien);
+                && _verleihService.sindAlleNichtVerliehen(medien) && _vormerkService.istKundeErsterVormerker(medien, kunde);
  
         return ausleiheMoeglich;
     }

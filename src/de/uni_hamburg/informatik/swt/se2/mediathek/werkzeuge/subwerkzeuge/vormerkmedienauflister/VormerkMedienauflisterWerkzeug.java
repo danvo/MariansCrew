@@ -12,6 +12,7 @@ import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.Medium;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.ServiceObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihService;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerken.VormerkService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.ObservableSubWerkzeug;
 
 /**
@@ -29,6 +30,7 @@ public class VormerkMedienauflisterWerkzeug extends ObservableSubWerkzeug
     private VormerkMedienauflisterUI _ui;
     private MedienbestandService _medienbestand;
     private final VerleihService _verleihService;
+    private VormerkService _vormerkService;
 
     /**
      * Initialisiert ein neues VormerkMedienauflisterWerkzeug. Es wird die
@@ -41,13 +43,15 @@ public class VormerkMedienauflisterWerkzeug extends ObservableSubWerkzeug
      * @require verleihService != null
      */
     public VormerkMedienauflisterWerkzeug(MedienbestandService medienbestand,
-            VerleihService verleihService)
+            VerleihService verleihService, VormerkService vormerkService)
     {
         assert medienbestand != null : "Vorbedingung verletzt: medienbestand != null";
         assert verleihService != null : "Vorbedingung verletzt: verleihService != null";
-
+        assert vormerkService != null : "Vorbedingung verletzt: vormerkService != null";
+        
         _medienbestand = medienbestand;
         _verleihService = verleihService;
+        _vormerkService = vormerkService;
 
         // UI wird erzeugt.
         _ui = new VormerkMedienauflisterUI();
@@ -84,11 +88,23 @@ public class VormerkMedienauflisterWerkzeug extends ObservableSubWerkzeug
             // Entleiher und möglichen Vormerkern ausgestattet werden.
             // Ist dies korrekt implementiert, erscheinen in der Vormerkansicht
             // die Namen des Entleihers und der möglichen 3 Vormerker.
-            Kunde entleiher = null;
+        	ArrayList<Kunde> vormerker = (ArrayList<Kunde>) _vormerkService.getVormerker(medium); 
+            Kunde entleiher = _verleihService.getEntleiherFuer(medium);
             Kunde vormerker1 = null;
             Kunde vormerker2 = null;
             Kunde vormerker3 = null;
-
+            if (vormerker != null) {
+                switch (vormerker.size()) {
+    			case 3:
+    				vormerker3 = vormerker.get(2);
+    			case 2:
+    				vormerker2 = vormerker.get(1);
+    			case 1:
+    				vormerker1 = vormerker.get(0);
+    			default:
+    				break;
+    			}
+            }
             medienFormatierer.add(new VormerkMedienFormatierer(medium,
                     entleiher, vormerker1, vormerker2, vormerker3));
         }
@@ -129,6 +145,7 @@ public class VormerkMedienauflisterWerkzeug extends ObservableSubWerkzeug
         };
         _medienbestand.registriereBeobachter(beobachter);
         _verleihService.registriereBeobachter(beobachter);
+        _vormerkService.registriereBeobachter(beobachter);
     }
 
     /**

@@ -2,13 +2,15 @@ package de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Kunde;
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Vormerkkarte;
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.Medium;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.AbstractObservableService;
 
-public class VormerkService
+public class VormerkService extends AbstractObservableService
 {
     
     private Map<Medium, Vormerkkarte>_vormerkKarten;
@@ -20,7 +22,14 @@ public class VormerkService
     public void merkeVor(Medium medium, Kunde kunde) throws VormerkkarteVollException 
     {
     	Vormerkkarte vormerkkarte = _vormerkKarten.get(medium);
-    	vormerkkarte.fuegeKundenHinzu(kunde);
+    	if (vormerkkarte != null) {
+    		vormerkkarte.fuegeKundenHinzu(kunde);
+    	} else {
+    		vormerkkarte = new Vormerkkarte();
+    		vormerkkarte.fuegeKundenHinzu(kunde);
+    		_vormerkKarten.put(medium, vormerkkarte);
+    	}
+    	 informiereUeberAenderung();
     }
     
     public boolean istVormerkenMoeglich(Medium medium)
@@ -32,16 +41,33 @@ public class VormerkService
     		return true;
     	}
     }
-
-    public boolean istKundeErsterVormerker(Medium medium, Kunde kunde)
+    
+    public List<Kunde> getVormerker(Medium medium) 
     {
-    	Vormerkkarte vormerkkarte = _vormerkKarten.get(medium);
-    	ArrayList<Kunde> vormerker = vormerkkarte.getVormerker();
-    	return kunde == vormerker.get(0);
+    	if (_vormerkKarten.get(medium) != null) {
+    		return _vormerkKarten.get(medium).getVormerker();
+    	}
+    	return null;
+    }
+    
+    public boolean istKundeErsterVormerker(List<Medium> medien, Kunde kunde)
+    {
+    	boolean istErsterVormerker = true;
+    	for (Medium medium : medien) {
+    		if (_vormerkKarten.get(medium) != null) {
+    			ArrayList<Kunde> vormerker = _vormerkKarten.get(medium).getVormerker();
+            	if (!(kunde == vormerker.get(0))) {
+                	return false;
+            	}
+    		}
+		}
+    	return istErsterVormerker;
     }
     
     public void entferneErsteVormerkung(Medium medium)
     {
-    	_vormerkKarten.get(medium).rueckeVormerkungAuf();
+    	if (_vormerkKarten.get(medium) != null) {
+    		_vormerkKarten.get(medium).rueckeVormerkungAuf();
+    	}
     }
 }
