@@ -32,12 +32,15 @@ public class VormerkService extends AbstractObservableService
     	 informiereUeberAenderung();
     }
     
-    public boolean istVormerkenMoeglich(Medium medium)
+    public boolean istVormerkenMoeglich(Medium medium, Kunde kunde)
     {
     	Vormerkkarte vormerkkarte = _vormerkKarten.get(medium);
-    	if (vormerkkarte != null) {
-    		return vormerkkarte.getAnzahlVormerker() < 3;
-    	} else {
+    	if (vormerkkarte != null) 
+    	{
+    		return (vormerkkarte.getAnzahlVormerker() < 3) && !vormerkkarte.getVormerker().contains(kunde);
+    	} 
+    	else 
+    	{
     		return true;
     	}
     }
