@@ -188,26 +188,29 @@ public class VerleihServiceImpl extends AbstractObservableService implements
     @Override
     public void verleiheAn(Kunde kunde, List<Medium> medien, Datum ausleihDatum)
             throws ProtokollierException
-    {
-        assert kundeImBestand(kunde) : "Vorbedingung verletzt: kundeImBestand(kunde)";
-        assert sindAlleNichtVerliehen(medien) : "Vorbedingung verletzt: sindAlleNichtVerliehen(medien) ";
-        assert ausleihDatum != null : "Vorbedingung verletzt: ausleihDatum != null";
-        assert istVerleihenMoeglich(kunde, medien) : "Vorbedingung verletzt:  istVerleihenMoeglich(kunde, medien)";
+ {
+		assert kundeImBestand(kunde) : "Vorbedingung verletzt: kundeImBestand(kunde)";
+		assert sindAlleNichtVerliehen(medien) : "Vorbedingung verletzt: sindAlleNichtVerliehen(medien) ";
+		assert ausleihDatum != null : "Vorbedingung verletzt: ausleihDatum != null";
+		assert istVerleihenMoeglich(kunde, medien) : "Vorbedingung verletzt:  istVerleihenMoeglich(kunde, medien)";
+		if (_vormerkService.istKundeErsterVormerker(medien, kunde)) 
+		{
+			for (Medium medium : medien) 
+			{
 
-        for (Medium medium : medien)
-        {
-            Verleihkarte verleihkarte = new Verleihkarte(kunde, medium,
-                    ausleihDatum);
+				Verleihkarte verleihkarte = new Verleihkarte(kunde, medium,
+						ausleihDatum);
 
-            _verleihkarten.put(medium, verleihkarte);
-            _protokollierer.protokolliere(
-                    VerleihProtokollierer.EREIGNIS_AUSLEIHE, verleihkarte);
-            _vormerkService.entferneErsteVormerkung(medium);
-        }
-        // XXX Was passiert wenn das Protokollieren mitten in der Schleife
-        // schief geht? informiereUeberAenderung in einen finally Block?
-        informiereUeberAenderung();
-    }
+				_verleihkarten.put(medium, verleihkarte);
+				_protokollierer.protokolliere(
+						VerleihProtokollierer.EREIGNIS_AUSLEIHE, verleihkarte);
+				_vormerkService.entferneErsteVormerkung(medium);
+			}
+			// XXX Was passiert wenn das Protokollieren mitten in der Schleife
+			// schief geht? informiereUeberAenderung in einen finally Block?
+			informiereUeberAenderung();
+		}
+	}
 
     @Override
     public boolean kundeImBestand(Kunde kunde)
