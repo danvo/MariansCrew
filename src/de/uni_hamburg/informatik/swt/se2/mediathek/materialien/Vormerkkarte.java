@@ -1,9 +1,7 @@
 package de.uni_hamburg.informatik.swt.se2.mediathek.materialien;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.Medium;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerken.VormerkkarteVollException;
 
 public class Vormerkkarte

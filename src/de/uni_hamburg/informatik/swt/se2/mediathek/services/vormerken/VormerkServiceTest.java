@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.Test;
 
 import de.uni_hamburg.informatik.swt.se2.mediathek.fachwerte.Datum;
-import de.uni_hamburg.informatik.swt.se2.mediathek.fachwerte.DatumTest;
 import de.uni_hamburg.informatik.swt.se2.mediathek.fachwerte.Kundennummer;
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Kunde;
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Verleihkarte;
@@ -19,7 +18,6 @@ import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.Kundenst
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.KundenstammServiceImpl;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandServiceImpl;
-import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.ProtokollierException;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihServiceImpl;
 
@@ -107,14 +105,6 @@ public class VormerkServiceTest {
        	assertTrue(_vormerkService.getVormerker(_medienListe.get(1)).contains(_kunde2));
     }
     
-    @Test
-    public void testeAusleiherKannNichtVormerken() throws Exception
-    {
-    	Medium medium = _medienListe.get(2);
-    	_verleihService.verleiheAn(_kunde, _medienListe.subList(2, 3), new Datum(1, 2 ,2013));
-    	_vormerkService.merkeVor(medium, _kunde);
-    	assertFalse(_vormerkService.getVormerker(medium).contains(_kunde));
-    }
     
     @Test
     public void testeAusleihenNurAnErstenVormerker() throws Exception
