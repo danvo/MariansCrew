@@ -246,7 +246,8 @@ public class VormerkWerkzeug
         }
         boolean vormerkenMoeglich = false;
         for (Medium medium : medien) {
-        	if(_vormerkService.istVormerkenMoeglich(medium, kunde))
+        	Kunde entleiher = _verleihService.getEntleiherFuer(medium);
+        	if(_vormerkService.istVormerkenMoeglich(medium, kunde) && (entleiher != null ? !entleiher.equals(kunde) : true))
         	{
         		vormerkenMoeglich = true;
         	}
