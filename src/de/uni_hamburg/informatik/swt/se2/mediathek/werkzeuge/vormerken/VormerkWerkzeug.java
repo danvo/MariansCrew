@@ -177,6 +177,10 @@ public class VormerkWerkzeug
         });
     }
     
+    /**
+     * Registiert die Aktion, die ausgeführt wird, wenn auf den Stornieren-Button
+     * gedrückt wird.
+     */
     private void registriereStornierAktion() 
     {
     	_vormerkUI.getStornierenButton().addActionListener(new ActionListener() {
@@ -259,6 +263,10 @@ public class VormerkWerkzeug
         return vormerkenMoeglich;
 	}
     
+    /**
+     * Prüft, ob stornieren der Vormerkungen eines Kunden auf den ausgewählten Medien möglich ist.
+     * @return true, wenn es möglich ist; false, sonst
+     */
     private boolean istStornierenMoeglich()
     {
         List<Medium> medien = _medienAuflisterWerkzeug.getSelectedMedien();
@@ -300,6 +308,9 @@ public class VormerkWerkzeug
 		}
     }
     
+    /**
+     * Storniert die Vormerkungen, die ein Kunde bei den ausgewählten Medien hat.
+     */
     private void storniereVormerkung() 
     {
         List<Medium> selectedMedien = _medienAuflisterWerkzeug.getSelectedMedien();
